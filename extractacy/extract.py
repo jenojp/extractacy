@@ -22,6 +22,7 @@ class ValueExtractor(object):
         the Doc, so it can be processed by the next component
         in the pipeline, if available.
         """
+        matches = self.matcher(doc)
         for e in doc.ents:
             if e.end >= len(doc) or e.label_ not in self.ent_patterns.keys():
                 e._.value_extract = None
@@ -32,19 +33,36 @@ class ValueExtractor(object):
                         self.ent_patterns[e.label_]["n_tokens"]["direction"]
                     )
                 if "pattern_match" in self.ent_patterns[e.label_].keys():
-                    e._.value_extract = get_pattern_match(
-                        doc, e, self.ent_patterns[e.label_]["pattern_match"]["n"],
+                    e._.value_extract = self.get_pattern_match(
+                        doc, e, matches, self.ent_patterns[e.label_]["pattern_match"]["n"],
                         self.ent_patterns[e.label_]["pattern_match"]["direction"]
                     )
         return doc
 
-    def get_pattern_match(self, doc, entity, n, direction):
+    def get_pattern_match(self, doc, entity, matches, n, direction):
         """
         gets first matched pattern within n tokens or
         in same sentence (if n == "sent")
         """
+        if type(n) == int:
+            boundary_idx = entity.end+(n-1)
+        elif n == "sent":
+            boundary_idx = entity.sent.end-1
+        else:
+            raise ValueError("If using pattern_match, expecting n to be an int or equal to 'sent'")
+        first_match = next(
+            (self.nlp.vocab.strings[match_id], start, end) 
+            for match_id, start, end in matches 
+            if (self.nlp.vocab.strings[match_id] == "_"+entity.label_) 
+            and (start >= entity.end)
+            and (start <= boundary_idx)
+            )
+        
+        if first_match:
+            return doc[first_match[1]:first_match[2]].text
+        else:
+            return None
 
-        return text
     def get_n_tokens(self, doc, entity, n, direction):
         """
         gets first n tokens to the right or left. If token is

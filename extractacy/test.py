@@ -13,12 +13,12 @@ def build_docs():
                 ("Discharge Date", "November 15, 2008"),
                 ("November 15, 2008", None),
                 ("temp", "102.6 f"),
+                ("102.6", None),
             ],
         )
     )
 
     return docs
-
 
 def test():
     nlp = spacy.load("en_core_web_sm")
