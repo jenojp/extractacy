@@ -8,12 +8,14 @@ def build_docs():
     docs = list()
     docs.append(
         (
-            "Discharge Date: November 15, 2008. Patient had temp reading of 102.6 f",
+            "Discharge Date: November 15, 2008. Patient had temp reading of 102.6 degrees. Insurance claim sent to patient's account on file: 1112223.",
             [
                 ("Discharge Date", "November 15, 2008"),
                 ("November 15, 2008", None),
-                ("temp", "102.6 f"),
-                ("102.6", None),
+                ("temp", "102.6 degrees"),
+                ("102.6 degrees", None),
+                ("account", "1112223"),
+                ("1112223", None),
             ],
         )
     )
@@ -30,9 +32,11 @@ def test():
             "label": "DISCHARGE_DATE",
             "pattern": [{"LOWER": "discharge"}, {"LOWER": "date"}],
         },
+        {"label": "ACCOUNT", "pattern": [{"LOWER": "account"}]},
         
     ]
     ruler.add_patterns(patterns)
+    nlp.add_pipe(ruler, last=True)
 
     ent_patterns = {
         "DISCHARGE_DATE": {"n_tokens": {"n": 1, "direction": "right"}},
@@ -43,7 +47,7 @@ def test():
                         {"LIKE_NUM": True},
                         {
                             "LOWER": {
-                                "IN": ["f", "c", "farenheit", "celcius", "centigrade"]
+                                "IN": ["f", "c", "farenheit", "celcius", "centigrade", "degrees"]
                             }
                         },
                     ]
@@ -52,8 +56,19 @@ def test():
                 "direction": "right"
             }
         },
+        "ACCOUNT": {
+            "pattern_match": {
+                "patterns": [
+                    [
+                        {"LIKE_NUM": True, "LENGTH":{"==":7}},
+                    ]
+                ],
+                "n": "sent",
+                "direction": "right"
+            }
+        },
     }
-    nlp.add_pipe(ruler, last=True)
+
     valext = ValueExtractor(nlp, ent_patterns)
     nlp.add_pipe(valext, last=True)
     docs = build_docs()

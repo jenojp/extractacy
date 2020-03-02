@@ -16,13 +16,14 @@ class ValueExtractor(object):
             if "pattern_match" in value:
                 for pattern in value["pattern_match"]["patterns"]:
                     self.matcher.add("_"+str(key), None, pattern)
-
+        print(len(self.matcher))
     def __call__(self, doc):
         """Apply the pipeline component on a Doc object and Return 
         the Doc, so it can be processed by the next component
         in the pipeline, if available.
         """
         matches = self.matcher(doc)
+        print(matches)
         for e in doc.ents:
             if e.end >= len(doc) or e.label_ not in self.ent_patterns.keys():
                 e._.value_extract = None
@@ -51,13 +52,15 @@ class ValueExtractor(object):
         else:
             raise ValueError("If using pattern_match, expecting n to be an int or equal to 'sent'")
         first_match = next(
+            (
             (self.nlp.vocab.strings[match_id], start, end) 
             for match_id, start, end in matches 
             if (self.nlp.vocab.strings[match_id] == "_"+entity.label_) 
             and (start >= entity.end)
             and (start <= boundary_idx)
-            )
-        
+        )
+        , None)
+            
         if first_match:
             return doc[first_match[1]:first_match[2]].text
         else:

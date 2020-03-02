@@ -38,7 +38,7 @@ nlp.add_pipe(ruler, last=True)
 ent_patterns = {
     "DISCHARGE_DATE": {"n_tokens": {"n": 1, "direction":"right"}},
     "TEMP_READING": {"pattern_match": {"patterns": [
-                [{"LIKE_NUM": True},{"LOWER": {"IN": ["f", "c", "farenheit", "celcius", "centigrade"]}}]],
+                [{"LIKE_NUM": True},{"LOWER": {"IN": ["degrees", "farenheit", "celcius", "centigrade"]}}]],
                 "n": 3, "direction": "right"
         }
     },
@@ -47,12 +47,12 @@ ent_patterns = {
 valext = ValueExtractor(nlp, ent_patterns)
 nlp.add_pipe(valext, last=True)
 
-doc = nlp("Discharge Date: November 15, 2008. Patient had temp reading of 102.6 f")
+doc = nlp("Discharge Date: November 15, 2008. Patient had temp reading of 102.6 degrees.")
 for e in doc.ents:
     if e._.value_extract:
         print(e.text, e.label_, e._.value_extract)
 ## Discharge Date DISCHARGE_DATE November 15, 2008
-## temp reading TEMP_READING 102.6 f
+## temp reading TEMP_READING 102.6 degrees
 ```
 
 ### Value Extraction patterns
@@ -69,12 +69,12 @@ This method will return n tokens past an entity of interest.
 ```
 
 #### Pattern Match
-This method will return the first found pattern past an entity of interest. It relies on [spaCy token matching syntax](https://spacy.io/usage/rule-based-matching#matcher).
+This method will return the first found pattern past an entity of interest within n tokens or within the same sentence. It relies on [spaCy token matching syntax](https://spacy.io/usage/rule-based-matching#matcher).
 
 ```python
-{"ENTITY_NAME": {"pattern_match": {"patterns":[{"LOWER":"awesome"}, {"LOWER":"pattern"}]}}}
+{"ENTITY_NAME": {"pattern_match": {"patterns":[{"LOWER":"awesome"}, {"LOWER":"pattern"}], "n": 5, "direction": "right"}}}
 ```
-
+Use `"n":"sent"` for within sentence method rather than n tokens.
 
 
 ## Contributing
