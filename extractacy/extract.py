@@ -67,7 +67,6 @@ class ValueExtractor(object):
 
         else:
             raise ValueError("If using pattern_match, expecting n to be an int or equal to 'sent'")
-        for match_id, start, end in matches:
         filtered_matches = [
             doc[start:end].text
             for match_id, start, end in matches 
