@@ -55,6 +55,24 @@ def build_docs():
             ],
         )
     )
+    #check "both" direction with "sent"
+    docs.append(
+        (
+            "We believe 01/01/1980 is his date of birth but it could also be 01/02/1980",
+            [
+                ("date of birth", ["01/01/1980", "01/02/1980"]),
+            ],
+        )
+    )
+    docs.append(
+        (
+            "Birthdate: 01/01/1980.",
+            [
+                ("Birthdate", ["01/01/1980"]),
+                ("01/01/1980", []),
+            ],
+        )
+    )
 
     return docs
 
@@ -71,6 +89,8 @@ def test():
         {"label": "ACCOUNT", "pattern": [{"LOWER": "account"}]},
         {"label": "PAYMENT", "pattern": [{"LOWER": "payment"}, {"LOWER": "received"}]},
         {"label": "PAYMENT", "pattern": [{"LOWER": "payment"}, {"LOWER": "update"}]},
+        {"label": "BIRTHDATE", "pattern": [{"LOWER": "birthdate"}]},
+        {"label": "BIRTHDATE", "pattern": [{"LOWER": "date"},{"LOWER": "of"}, {"LOWER": "birth"}]},
         
     ]
     ruler.add_patterns(patterns)
@@ -102,6 +122,7 @@ def test():
                 "n": "sent",
                 "direction": "right"
         },
+        "BIRTHDATE": {"patterns": [[{"SHAPE": "dd/dd/dddd"}]],"n": "sent", "direction": "both"},
     }
 
     valext = ValueExtractor(nlp, ent_patterns)
