@@ -8,14 +8,50 @@ def build_docs():
     docs = list()
     docs.append(
         (
-            "Discharge Date: November 15, 2008. Patient had temp reading of 102.6 degrees. Insurance claim sent to patient's account on file: 1112223.",
+            "Discharge Date: 11/15/2008. Patient had temp reading of 102.6 degrees. Insurance claim sent to patient's account on file: 1112223. 12/31/2008: Payment received.",
             [
-                ("Discharge Date", "November 15, 2008"),
-                ("November 15, 2008", None),
-                ("temp", "102.6 degrees"),
-                ("102.6 degrees", None),
-                ("account", "1112223"),
-                ("1112223", None),
+                ("Discharge Date", ["11/15/2008"]),
+                ("11/15/2008", []),
+                ("temp", ["102.6 degrees"]),
+                ("102.6 degrees", []),
+                ("account", ["1112223"]),
+                ("1112223", []),
+                # ("12/31/2008", []),
+                ("Payment received", ["12/31/2008"])
+            ],
+        )
+    )
+    # testing a case where algorithm attempts to go left of a document start boundary
+    docs.append(
+        (
+            "Payment update: Funds deposited.",
+            [
+                ("Payment update", []),
+            ],
+        )
+    )
+    # testing a case where algorithm attempts to go right of a document end boundary
+    docs.append(
+        (
+            "We do not know the discharge date",
+            [
+                ("discharge date", []),
+            ],
+        )
+    )
+    docs.append(
+        (
+            ":Payment update: Funds deposited.",
+            [
+                ("Payment update", []),
+            ],
+        )
+    )
+    docs.append(
+        (
+            "We do not know the discharge date.",
+            [
+                ("discharge date", []),
             ],
         )
     )
@@ -33,15 +69,17 @@ def test():
             "pattern": [{"LOWER": "discharge"}, {"LOWER": "date"}],
         },
         {"label": "ACCOUNT", "pattern": [{"LOWER": "account"}]},
+        {"label": "PAYMENT", "pattern": [{"LOWER": "payment"}, {"LOWER": "received"}]},
+        {"label": "PAYMENT", "pattern": [{"LOWER": "payment"}, {"LOWER": "update"}]},
         
     ]
     ruler.add_patterns(patterns)
     nlp.add_pipe(ruler, last=True)
 
     ent_patterns = {
-        "DISCHARGE_DATE": {"n_tokens": {"n": 1, "direction": "right"}},
+        "DISCHARGE_DATE": {"patterns": [[{"SHAPE": "dd/dd/dddd"}]],"n": 2, "direction": "right"},
+        "PAYMENT": {"patterns": [[{"SHAPE": "dd/dd/dddd"}]],"n": 2, "direction": "left"},
         "TEMP_READING": {
-            "pattern_match": {
                 "patterns": [
                     [
                         {"LIKE_NUM": True},
@@ -54,10 +92,8 @@ def test():
                 ],
                 "n": 7,
                 "direction": "right"
-            }
         },
         "ACCOUNT": {
-            "pattern_match": {
                 "patterns": [
                     [
                         {"LIKE_NUM": True, "LENGTH":{"==":7}},
@@ -65,7 +101,6 @@ def test():
                 ],
                 "n": "sent",
                 "direction": "right"
-            }
         },
     }
 
@@ -77,7 +112,6 @@ def test():
         for i, e in enumerate(doc.ents):
             print(e.text, e._.value_extract)
             assert (e.text, e._.value_extract) == d[1][i]
-
-
+            
 if __name__ == "__main__":
     test()
