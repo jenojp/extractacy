@@ -1,7 +1,8 @@
 from spacy.matcher import Matcher
 from spacy.tokens import Token, Doc, Span
 
-#TODO: error handling for out of bounds token indexes (start and end of doc)
+# TODO: error handling for out of bounds token indexes (start and end of doc)
+
 
 class ValueExtractor(object):
     def __init__(self, nlp, ent_patterns):
@@ -14,7 +15,7 @@ class ValueExtractor(object):
 
         for key, value in self.ent_patterns.items():
             patterns = value["patterns"]
-            self.matcher.add("_"+str(key), patterns)
+            self.matcher.add("_" + str(key), patterns)
 
     def __call__(self, doc):
         """Apply the pipeline component on a Doc object and Return 
@@ -28,13 +29,16 @@ class ValueExtractor(object):
             else:
                 # if "n_tokens" in self.ent_patterns[e.label_].keys():
                 #     e._.value_extract = self.get_n_tokens(
-                #         doc, e, self.ent_patterns[e.label_]["n_tokens"]["n"], 
+                #         doc, e, self.ent_patterns[e.label_]["n_tokens"]["n"],
                 #         self.ent_patterns[e.label_]["n_tokens"]["direction"]
                 #       )
                 # if "pattern_match" in self.ent_patterns[e.label_].keys():
                 e._.value_extract = self.get_pattern_match(
-                    doc, e, matches, self.ent_patterns[e.label_]["n"],
-                    self.ent_patterns[e.label_]["direction"]
+                    doc,
+                    e,
+                    matches,
+                    self.ent_patterns[e.label_]["n"],
+                    self.ent_patterns[e.label_]["direction"],
                 )
         return doc
 
@@ -46,35 +50,37 @@ class ValueExtractor(object):
         if type(n) == int:
             if direction == "left":
                 boundary_i = entity.start
-                start_i = max(entity.start-n, 0)
+                start_i = max(entity.start - n, 0)
             else:
-                boundary_i = min(entity.end+(n-1), len(doc))
+                boundary_i = min(entity.end + (n - 1), len(doc))
                 if direction == "right":
                     start_i = entity.end
                 if direction == "both":
-                    start_i = max(entity.start-n, 0)
+                    start_i = max(entity.start - n, 0)
 
         elif n == "sent":
             if direction == "right":
                 start_i = entity.end
-                boundary_i = entity.sent.end-1
+                boundary_i = entity.sent.end - 1
             if direction == "both":
                 start_i = entity.sent.start
-                boundary_i = entity.sent.end-1
+                boundary_i = entity.sent.end - 1
             if direction == "left":
                 start_i = entity.sent.start
                 boundary_i = entity.start
 
         else:
-            raise ValueError("If using pattern_match, expecting n to be an int or equal to 'sent'")
+            raise ValueError(
+                "If using pattern_match, expecting n to be an int or equal to 'sent'"
+            )
         filtered_matches = [
             doc[start:end].text
-            for match_id, start, end in matches 
-            if (self.nlp.vocab.strings[match_id] == "_"+entity.label_) 
+            for match_id, start, end in matches
+            if (self.nlp.vocab.strings[match_id] == "_" + entity.label_)
             and (start >= start_i)
             and (start <= boundary_i)
         ]
-        return filtered_matches         
+        return filtered_matches
         # if first_match:
         #     return doc[first_match[1]:first_match[2]].text
         # else:
@@ -106,7 +112,7 @@ class ValueExtractor(object):
     #     return text
 
     # def get_whole_entity(self, doc, token_i, n, direction):
-    #     """Ensures that if a token is part of a named entity span, 
+    #     """Ensures that if a token is part of a named entity span,
     #     the whole span is returned.
     #     Span tokens count towards n tokens, however will move past
     #     n tokens if a span continues past.
