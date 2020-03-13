@@ -37,7 +37,7 @@ nlp.add_pipe(ruler, last=True)
 
 # Define ent_patterns for value extraction
 ent_patterns = {
-    "DISCHARGE_DATE": {"patterns": [[{"SHAPE": "dd/dd/dddd"}]],"n": 2, "direction": "right"},
+    "DISCHARGE_DATE": {"patterns": [[{"SHAPE": "dd/dd/dddd"}, {"SHAPE": "dd/d/dddd"}]],"n": 2, "direction": "right"},
     "TEMP_READING": {"patterns": [[
                         {"LIKE_NUM": True},
                         {"LOWER": {"IN": ["f", "c", "farenheit", "celcius", "centigrade", "degrees"]}
