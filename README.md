@@ -1,7 +1,7 @@
 <p align="center"><img width="40%" src="docs/icon.png" /></p>
 
 # extractacy - value extraction and linking for spaCy
-[![Build Status](https://dev.azure.com/jenopizzaro/extractacy/_apis/build/status/jenojp.extractacy?branchName=master)](https://dev.azure.com/jenopizzaro/extractacy/_build/latest?definitionId=3&branchName=master) [![Built with spaCy](https://img.shields.io/badge/made%20with%20❤%20and-spaCy-09a3d5.svg)](https://spacy.io) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black)
+[![Build Status](https://dev.azure.com/jenopizzaro/extractacy/_apis/build/status/jenojp.extractacy?branchName=master)](https://dev.azure.com/jenopizzaro/extractacy/_build/latest?definitionId=3&branchName=master) [![Built with spaCy](https://img.shields.io/badge/made%20with%20❤%20and-spaCy-09a3d5.svg)](https://spacy.io) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black) ![pypi Version](https://img.shields.io/pypi/v/extractacy.svg?style=flat-square)
 
 spaCy pipeline object for extracting values that correspond to a named entity (e.g., birth dates, account numbers, or laboratory results)
 
