@@ -17,7 +17,7 @@ import spacy
 from extractacy.extract import ValueExtractor
 ```
 
-Load spacy language model. Set up an EntityRuler for the example. Define the entites and value extraction patterns and add to nlp pipeline.
+Load spacy language model. Set up an EntityRuler for the example. 
 
 ```python
 nlp = spacy.load("en_core_web_sm")
@@ -34,7 +34,14 @@ patterns = [
 ]
 ruler.add_patterns(patterns)
 nlp.add_pipe(ruler, last=True)
+```
 
+Define which entities you would like to link patterns to. Each entity needs 3 things:
+1) patterns to search for (list). This relies on [spaCy token matching syntax](https://spacy.io/usage/rule-based-matching#matcher).
+2) n_tokens to search around a named entity (`int` or `sent`)
+3) direction (`right`, `left`, `both`)
+
+```python
 # Define ent_patterns for value extraction
 ent_patterns = {
     "DISCHARGE_DATE": {"patterns": [[{"SHAPE": "dd/dd/dddd"}, {"SHAPE": "dd/d/dddd"}]],"n": 2, "direction": "right"},
@@ -48,7 +55,11 @@ ent_patterns = {
                 "direction": "both"
         },
 }
+```
 
+Add ValueExtractor to spaCy processing pipeline
+
+```python
 valext = ValueExtractor(nlp, ent_patterns)
 nlp.add_pipe(valext, last=True)
 
@@ -56,17 +67,10 @@ doc = nlp("Discharge Date: 11/15/2008. Patient had temp reading of 102.6 degrees
 for e in doc.ents:
     if e._.value_extract:
         print(e.text, e.label_, e._.value_extract)
+        
 ## Discharge Date DISCHARGE_DATE 11/15/2008
 ## temp reading TEMP_READING 102.6 degrees
 ```
-
-### Value Extraction patterns
-Returns all patterns within n tokens of entity of interest or within the same sentence. It relies on [spaCy token matching syntax](https://spacy.io/usage/rule-based-matching#matcher).
-
-```python
-{"ENTITY_NAME":{"patterns":[{"LOWER":"awesome"}, {"LOWER":"pattern"}], "n": 5, "direction": "right"}}
-```
-Use `"n":"sent"` for within sentence method rather than n tokens.
 
 ## Contributing
 [contributing](https://github.com/jenojp/negspacy/blob/master/CONTRIBUTING.md)
