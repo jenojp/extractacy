@@ -1,8 +1,6 @@
 from spacy.matcher import Matcher
 from spacy.tokens import Token, Doc, Span
 
-# TODO: error handling for out of bounds token indexes (start and end of doc)
-
 
 class ValueExtractor(object):
     def __init__(self, nlp, ent_patterns):
@@ -27,12 +25,6 @@ class ValueExtractor(object):
             if e.end >= len(doc) or e.label_ not in self.ent_patterns.keys():
                 e._.value_extract = []
             else:
-                # if "n_tokens" in self.ent_patterns[e.label_].keys():
-                #     e._.value_extract = self.get_n_tokens(
-                #         doc, e, self.ent_patterns[e.label_]["n_tokens"]["n"],
-                #         self.ent_patterns[e.label_]["n_tokens"]["direction"]
-                #       )
-                # if "pattern_match" in self.ent_patterns[e.label_].keys():
                 e._.value_extract = self.get_pattern_match(
                     doc,
                     e,
@@ -81,64 +73,3 @@ class ValueExtractor(object):
             and (start <= boundary_i)
         ]
         return filtered_matches
-        # if first_match:
-        #     return doc[first_match[1]:first_match[2]].text
-        # else:
-        #     return None
-
-    # def get_n_tokens(self, doc, entity, n, direction):
-    #     """
-    #     gets first n tokens to the right or left. If token is
-    #     part of named entity, the whole span is returned.
-    #     If first token is punctuation or whitespace, moves to next.
-    #     """
-    #     print(entity.text, direction, entity.start, entity.end, len(doc))
-    #     if direction == "right":
-    #         if (entity.end+1 >= len(doc)):
-    #             return None
-    #         if (doc[entity.end].is_punct == True) or (doc[entity.end].is_space == True):
-    #             text = self.get_whole_entity(doc, entity.end + 1, n, "right")
-    #         else:
-    #             text = self.get_whole_entity(doc, entity.end, n, "right")
-
-    #     if direction == "left":
-    #         if entity.start == 0:
-    #             return None
-    #         if (doc[entity.start - 1].is_punct == True) or (doc[entity.start - 1].is_space == True):
-    #             text = self.get_whole_entity(doc, entity.start - 2, n, "left")
-    #         else:
-    #             text = self.get_whole_entity(doc, entity.start - 1, n, "left")
-
-    #     return text
-
-    # def get_whole_entity(self, doc, token_i, n, direction):
-    #     """Ensures that if a token is part of a named entity span,
-    #     the whole span is returned.
-    #     Span tokens count towards n tokens, however will move past
-    #     n tokens if a span continues past.
-    #     """
-    #     start = token_i
-
-    #     if direction == "right":
-    #         if doc[token_i].ent_type_ != "":
-    #             # continue to iterate if token is the beginning or inside ent
-    #             # OR if haven't reached n tokens yet
-    #             while ((doc[token_i].ent_iob_ in ["B", "I"]) or ((token_i - start) < n)) and (token_i < (len(doc)-1)):
-    #                 token_i += 1
-    #             text = doc[start:token_i].text
-    #         else:
-    #             text = doc[start : token_i + n].text
-
-    #         return text
-
-    #     if direction == "left":
-    #         if doc[token_i].ent_type_ != "":
-    #             # continue to iterate if token is the beginning or inside ent
-    #             # OR if haven't reached n tokens yet
-    #             while ((doc[token_i].ent_iob_ in ["I"]) or ((start - token_i) < n)) and (token_i > 0):
-    #                 token_i -= 1
-    #             text = doc[token_i:start+1].text
-    #         else:
-    #             text = doc[token_i - n : start+1].text
-
-    #         return text
