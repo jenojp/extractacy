@@ -68,7 +68,7 @@ def test():
 
     ent_patterns = {
         "DISCHARGE_DATE": {
-            "patterns": [[{"SHAPE": "dd/dd/dddd"}]],
+            "patterns": [[{"SHAPE": "dd/dd/dddd"}],[{"SHAPE": "dd/d/dddd"}]],
             "n": 2,
             "direction": "right",
         },
