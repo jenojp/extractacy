@@ -14,6 +14,7 @@ pip install extractacy
 Import library and spaCy.
 ```python
 import spacy
+from spacy.pipeline import EntityRuler
 from extractacy.extract import ValueExtractor
 ```
 

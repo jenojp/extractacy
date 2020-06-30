@@ -22,7 +22,7 @@ class ValueExtractor(object):
         """
         matches = self.matcher(doc)
         for e in doc.ents:
-            if e.end >= len(doc) or e.label_ not in self.ent_patterns.keys():
+            if e.label_ not in self.ent_patterns.keys():
                 e._.value_extract = []
             else:
                 e._.value_extract = self.get_pattern_match(

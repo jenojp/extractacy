@@ -40,6 +40,13 @@ def build_docs():
             [("Birthdate", ["01/01/1980"]), ("01/01/1980", []),],
         )
     )
+    #where last token in doc is an ent
+    docs.append(
+        (
+            "We believe 01/01/1980 is his date of birth",
+            [("date of birth", ["01/01/1980"])],
+        )
+    )
 
     return docs
 
