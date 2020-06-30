@@ -3,7 +3,7 @@ import io
 
 setup(
     name = 'extractacy',
-    version = 'v0.1.1',
+    version = 'v0.1.2',
     url = 'https://github.com/jenojp/extractacy',
     author = 'Jeno Pizarro',
     author_email = 'jenopizzaro@gmail.com',
