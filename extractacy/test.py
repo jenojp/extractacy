@@ -40,6 +40,23 @@ def build_docs():
             [("Birthdate", ["01/01/1980"]), ("01/01/1980", []),],
         )
     )
+    #where last token in doc is an ent
+    docs.append(
+        (
+            "We believe 01/01/1980 is his date of birth",
+            [("date of birth", ["01/01/1980"])],
+        )
+    )
+    # test outside boundary
+    docs.append(
+        (
+            "Discharge date unknown. 12/12/1999 date of confirmation.",
+            [
+            ("Discharge date", []),
+            ("12/12/1999", [])
+            ],
+        )
+    )
 
     return docs
 
@@ -117,6 +134,7 @@ def test():
         doc = nlp(d[0])
         for i, e in enumerate(doc.ents):
             print(e.text, e._.value_extract)
+            print([t.text for t in doc])
             assert (e.text, e._.value_extract) == d[1][i]
 
 
