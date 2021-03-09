@@ -11,7 +11,7 @@ def build_docs():
             "Discharge Date: 11/15/2008. Patient had temp reading of 102.6 degrees. Insurance claim sent to patient's account on file: 1112223. 12/31/2008: Payment received.",
             [
                 ("Discharge Date", ["11/15/2008"]),
-                ("11/15/2008", []),
+                # ("11/15/2008", []),
                 ("temp", ["102.6 degrees"]),
                 ("102.6 degrees", []),
                 ("account", ["1112223"]),
@@ -22,25 +22,58 @@ def build_docs():
         )
     )
     # testing a case where algorithm attempts to go left of a document start boundary
-    docs.append(("Payment update: Funds deposited.", [("Payment update", []),],))
+    docs.append(
+        (
+            "Payment update: Funds deposited.",
+            [
+                ("Payment update", []),
+            ],
+        )
+    )
     # testing a case where algorithm attempts to go right of a document end boundary
-    docs.append(("We do not know the discharge date", [("discharge date", []),],))
-    docs.append((":Payment update: Funds deposited.", [("Payment update", []),],))
-    docs.append(("We do not know the discharge date.", [("discharge date", []),],))
+    docs.append(
+        (
+            "We do not know the discharge date",
+            [
+                ("discharge date", []),
+            ],
+        )
+    )
+    docs.append(
+        (
+            ":Payment update: Funds deposited.",
+            [
+                ("Payment update", []),
+            ],
+        )
+    )
+    docs.append(
+        (
+            "We do not know the discharge date.",
+            [
+                ("discharge date", []),
+            ],
+        )
+    )
     # check "both" direction with "sent"
     docs.append(
         (
             "We believe 01/01/1980 is his date of birth but it could also be 01/02/1980",
-            [("date of birth", ["01/01/1980", "01/02/1980"]),],
+            [
+                ("date of birth", ["01/01/1980", "01/02/1980"]),
+            ],
         )
     )
     docs.append(
         (
             "Birthdate: 01/01/1980.",
-            [("Birthdate", ["01/01/1980"]), ("01/01/1980", []),],
+            [
+                ("Birthdate", ["01/01/1980"]),
+                ("01/01/1980", []),
+            ],
         )
     )
-    #where last token in doc is an ent
+    # where last token in doc is an ent
     docs.append(
         (
             "We believe 01/01/1980 is his date of birth",
@@ -51,10 +84,7 @@ def build_docs():
     docs.append(
         (
             "Discharge date unknown. 12/12/1999 date of confirmation.",
-            [
-            ("Discharge date", []),
-            ("12/12/1999", [])
-            ],
+            [("Discharge date", []), ("12/12/1999", [])],
         )
     )
 
@@ -63,7 +93,7 @@ def build_docs():
 
 def test():
     nlp = spacy.load("en_core_web_sm")
-    ruler = EntityRuler(nlp)
+    ruler = nlp.add_pipe("entity_ruler")
     patterns = [
         {"label": "TEMP_READING", "pattern": [{"LOWER": "temperature"}]},
         {"label": "TEMP_READING", "pattern": [{"LOWER": "temp"}]},
@@ -81,11 +111,10 @@ def test():
         },
     ]
     ruler.add_patterns(patterns)
-    nlp.add_pipe(ruler, last=True)
 
     ent_patterns = {
         "DISCHARGE_DATE": {
-            "patterns": [[{"SHAPE": "dd/dd/dddd"}],[{"SHAPE": "dd/d/dddd"}]],
+            "patterns": [[{"SHAPE": "dd/dd/dddd"}], [{"SHAPE": "dd/d/dddd"}]],
             "n": 2,
             "direction": "right",
         },
@@ -116,7 +145,11 @@ def test():
             "direction": "right",
         },
         "ACCOUNT": {
-            "patterns": [[{"LIKE_NUM": True, "LENGTH": {"==": 7}},]],
+            "patterns": [
+                [
+                    {"LIKE_NUM": True, "LENGTH": {"==": 7}},
+                ]
+            ],
             "n": "sent",
             "direction": "right",
         },
@@ -126,9 +159,7 @@ def test():
             "direction": "both",
         },
     }
-
-    valext = ValueExtractor(nlp, ent_patterns)
-    nlp.add_pipe(valext, last=True)
+    nlp.add_pipe("valext", config={"ent_patterns": ent_patterns}, last=True)
     docs = build_docs()
     for d in docs:
         doc = nlp(d[0])

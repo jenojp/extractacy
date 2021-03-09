@@ -1,9 +1,11 @@
+from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Token, Doc, Span
 
 
-class ValueExtractor(object):
-    def __init__(self, nlp, ent_patterns):
+@Language.factory("valext")
+class ValueExtractor:
+    def __init__(self, nlp: Language, name:str, ent_patterns: dict):
 
         Span.set_extension("value_extract", default=[], force=True)
         self.nlp = nlp
@@ -16,7 +18,7 @@ class ValueExtractor(object):
             self.matcher.add("_" + str(key), patterns)
 
     def __call__(self, doc):
-        """Apply the pipeline component on a Doc object and Return 
+        """Apply the pipeline component on a Doc object and Return
         the Doc, so it can be processed by the next component
         in the pipeline, if available.
         """

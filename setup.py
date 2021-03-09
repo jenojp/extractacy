@@ -3,7 +3,7 @@ import io
 
 setup(
     name = 'extractacy',
-    version = 'v0.1.2',
+    version = 'v1.0.0',
     url = 'https://github.com/jenojp/extractacy',
     author = 'Jeno Pizarro',
     author_email = 'jenopizzaro@gmail.com',
@@ -13,7 +13,7 @@ setup(
     keywords = ["nlp, spacy, SpaCy, NER, entity extraction, value extraction"],
     classifiers=[
         'Intended Audience :: Science/Research',
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
@@ -24,7 +24,7 @@ setup(
     packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     license="MIT",
     install_requires=[
-        "spacy>=2.1.8",
+        "spacy>=3.0.1,<3.1.0",
         ],
     tests_require=[
         "pytest",

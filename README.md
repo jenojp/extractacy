@@ -23,7 +23,7 @@ Load spacy language model. Set up an EntityRuler for the example.
 ```python
 nlp = spacy.load("en_core_web_sm")
 # Set up entity ruler
-ruler = EntityRuler(nlp)
+ruler = nlp.add_pipe("entity_ruler")
 patterns = [
     {"label": "TEMP_READING", "pattern": [{"LOWER": "temperature"}]},
     {"label": "TEMP_READING", "pattern": [{"LOWER": "temp"}]},
@@ -34,7 +34,6 @@ patterns = [
     
 ]
 ruler.add_patterns(patterns)
-nlp.add_pipe(ruler, last=True)
 ```
 
 Define which entities you would like to link patterns to. Each entity needs 3 things:
@@ -61,8 +60,7 @@ ent_patterns = {
 Add ValueExtractor to spaCy processing pipeline
 
 ```python
-valext = ValueExtractor(nlp, ent_patterns)
-nlp.add_pipe(valext, last=True)
+nlp.add_pipe("valext", config={"ent_patterns":ent_patterns}, last=True)
 
 doc = nlp("Discharge Date: 11/15/2008. Patient had temp reading of 102.6 degrees.")
 for e in doc.ents:
