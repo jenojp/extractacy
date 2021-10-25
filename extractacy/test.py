@@ -11,12 +11,12 @@ def build_docs():
             "Discharge Date: 11/15/2008. Patient had temp reading of 102.6 degrees. Insurance claim sent to patient's account on file: 1112223. 12/31/2008: Payment received.",
             [
                 ("Discharge Date", ["11/15/2008"]),
-                # ("11/15/2008", []),
+                ("11/15/2008", []),
                 ("temp", ["102.6 degrees"]),
                 ("102.6 degrees", []),
                 ("account", ["1112223"]),
                 ("1112223", []),
-                # ("12/31/2008", []),
+                ("12/31/2008", []),
                 ("Payment received", ["12/31/2008"]),
             ],
         )
@@ -61,6 +61,7 @@ def build_docs():
             "We believe 01/01/1980 is his date of birth but it could also be 01/02/1980",
             [
                 ("date of birth", ["01/01/1980", "01/02/1980"]),
+                ("01/02/1980",[])
             ],
         )
     )
@@ -84,7 +85,7 @@ def build_docs():
     docs.append(
         (
             "Discharge date unknown. 12/12/1999 date of confirmation.",
-            [("Discharge date", []), ("12/12/1999", [])],
+            [("Discharge date", []), ("12/12/1999 date", [])],
         )
     )
 

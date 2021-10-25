@@ -5,7 +5,7 @@ from spacy.tokens import Token, Doc, Span
 
 @Language.factory("valext")
 class ValueExtractor:
-    def __init__(self, nlp: Language, name:str, ent_patterns: dict):
+    def __init__(self, nlp: Language, name: str, ent_patterns: dict):
 
         Span.set_extension("value_extract", default=[], force=True)
         self.nlp = nlp
