@@ -24,7 +24,7 @@ setup(
     packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     license="MIT",
     install_requires=[
-        "spacy>=3.0.1,<3.3.0",
+        "spacy>=3.0.1,<4.0.0",
         ],
     tests_require=[
         "pytest",

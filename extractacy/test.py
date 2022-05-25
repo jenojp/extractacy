@@ -11,12 +11,12 @@ def build_docs():
             "Discharge Date: 11/15/2008. Patient had temp reading of 102.6 degrees. Insurance claim sent to patient's account on file: 1112223. 12/31/2008: Payment received.",
             [
                 ("Discharge Date", ["11/15/2008"]),
-                ("11/15/2008", []),
+                # ("11/15/2008", []),
                 ("temp", ["102.6 degrees"]),
                 ("102.6 degrees", []),
                 ("account", ["1112223"]),
                 ("1112223", []),
-                ("12/31/2008", []),
+                # ("12/31/2008", []),
                 ("Payment received", ["12/31/2008"]),
             ],
         )
@@ -60,6 +60,7 @@ def build_docs():
         (
             "We believe 01/01/1980 is his date of birth but it could also be 01/02/1980",
             [
+                ("01/01/1980",[]),
                 ("date of birth", ["01/01/1980", "01/02/1980"]),
                 ("01/02/1980",[])
             ],
@@ -78,14 +79,17 @@ def build_docs():
     docs.append(
         (
             "We believe 01/01/1980 is his date of birth",
-            [("date of birth", ["01/01/1980"])],
+            [
+                ("01/01/1980", []),
+                ("date of birth", ["01/01/1980"])
+                ],
         )
     )
     # test outside boundary
     docs.append(
         (
             "Discharge date unknown. 12/12/1999 date of confirmation.",
-            [("Discharge date", []), ("12/12/1999 date", [])],
+            [("Discharge date", []), ("12/12/1999", [])],
         )
     )
 
@@ -164,9 +168,20 @@ def test():
     docs = build_docs()
     for d in docs:
         doc = nlp(d[0])
+        print()
+        print()
+        print("sentences...")
+        for s in doc.sents:
+            print(s)
+        print("tokens....")
+        print([t.text for t in doc])
+        print("entities....")
+        for e in doc.ents:
+            print(e.text, e.start, e.end)
+        print("value extracts....")
         for i, e in enumerate(doc.ents):
             print(e.text, e._.value_extract)
-            print([t.text for t in doc])
+        for i, e in enumerate(doc.ents):
             assert (e.text, e._.value_extract) == d[1][i]
 
 
