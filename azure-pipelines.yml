@@ -13,32 +13,32 @@ trigger:
 strategy:
   matrix:
     Python37Linux:
-          imageName: 'ubuntu-20.04'
-          python.version: '3.7'
-        Python38Linux:
-          imageName: 'ubuntu-20.04'
-          python.version: '3.8'
-        Python39Linux:
-          imageName: 'ubuntu-20.04'
-          python.version: '3.9'
-        Python37Mac:
-          imageName: 'macos-11'
-          python.version: '3.7'
-        Python38Mac:
-          imageName: 'macos-11'
-          python.version: '3.8'
-        Python39Mac:
-          imageName: 'macos-11'
-          python.version: '3.9'
-        Python37Windows:
-          imageName: 'windows-2019'
-          python.version: '3.7'
-        Python38Windows:
-          imageName: 'windows-2019'
-          python.version: '3.8'
-        Python39Windows:
-          imageName: 'windows-2019'
-          python.version: '3.9'
+      imageName: 'ubuntu-20.04'
+      python.version: '3.7'
+    Python38Linux:
+      imageName: 'ubuntu-20.04'
+      python.version: '3.8'
+    Python39Linux:
+      imageName: 'ubuntu-20.04'
+      python.version: '3.9'
+    Python37Mac:
+      imageName: 'macos-11'
+      python.version: '3.7'
+    Python38Mac:
+      imageName: 'macos-11'
+      python.version: '3.8'
+    Python39Mac:
+      imageName: 'macos-11'
+      python.version: '3.9'
+    Python37Windows:
+      imageName: 'windows-2019'
+      python.version: '3.7'
+    Python38Windows:
+      imageName: 'windows-2019'
+      python.version: '3.8'
+    Python39Windows:
+      imageName: 'windows-2019'
+      python.version: '3.9'
   maxParallel: 9
 
 pool:
