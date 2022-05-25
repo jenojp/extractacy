@@ -23,6 +23,8 @@ class ValueExtractor:
         in the pipeline, if available.
         """
         matches = self.matcher(doc)
+        for match_id, start, end in matches:
+            print(self.nlp.vocab.strings[match_id], start, end)
         for e in doc.ents:
             if e.label_ not in self.ent_patterns.keys():
                 e._.value_extract = []
